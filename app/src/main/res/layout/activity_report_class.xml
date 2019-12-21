@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".User.ReportClass">
+
+    <RelativeLayout
+        android:id="@+id/rel1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textColor="@android:color/black"
+            android:id="@+id/text_classreport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="a1"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_marginTop="20dp"/>
+
+        <LinearLayout
+            android:id="@+id/linear1"
+            android:layout_below="@id/text_classreport"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/text_datereport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="20 des 2019"
+                android:layout_weight="1"
+                android:textAlignment="textEnd"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:textColor="@android:color/black"
+                android:id="@+id/text_timereport"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:text="18.00 - 19.00"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+
+
+
+        <EditText
+            android:textColor="@android:color/black"
+            android:layout_below="@+id/linear1"
+            android:id="@+id/input_notereport"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:hint="@string/text_hint_note"
+            android:padding="10dp"/>
+
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/report_recycle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rel1"
+        android:padding="10dp"
+        android:layout_above="@+id/save_report_btn"/>
+
+    <TextView
+        android:textColor="@android:color/black"
+        android:id="@+id/text_nodata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_tidakadadata"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp" />
+
+    <Button
+        android:textColor="@android:color/white"
+        android:id="@+id/save_report_btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:text="@string/btn_savetext"
+        android:textAllCaps="false"
+        android:background="@drawable/gradientbackground"/>
+
+</RelativeLayout>

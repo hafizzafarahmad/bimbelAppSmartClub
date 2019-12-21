@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/text_an"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="@string/text_AN"
+            android:id="@+id/form_an"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <Spinner
+        android:layout_below="@+id/text_an"
+        android:id="@+id/spinner_payment_confrm"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:layout_marginTop="8dp"
+        android:id="@+id/edt_image_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@+id/spinner_payment_confrm"
+        android:src="@drawable/ic_add_image"
+        android:padding="10dp"/>
+
+</RelativeLayout>

@@ -1,0 +1,94 @@
+<resources>
+    <string name="app_name">Smart Club</string>
+    <string name="text_forgotpassword">Lupa Password</string>
+    <string name="text_login">Login</string>
+    <string name="text_search">Cari</string>
+
+    //FORM
+    <string name="text_nis">NIS</string>
+    <string name="text_nama">Nama</string>
+    <string name="text_email">Email</string>
+    <string name="text_ttl">Tempat Tanggal Lahir</string>
+    <string name="text_address">Alamat</string>
+    <string name="text_phone">Nomor Telephone</string>
+    <string name="text_password">Password</string>
+    <string name="text_pendidikan">Pendidikan Terakhir</string>
+    <string name="text_edt_button">Edit Profile</string>
+    <string name="text_hint_note">Catatan</string>
+    <string name="text_AN">Atas Nama</string>
+    <string name="text_ortu">Orang Tua</string>
+    <string name="text_phone_ortu">Telepon Orang Tua</string>
+    <string name="btn_savetext">Selesai</string>
+    <string name="text_matapel">Mata Pelajaran</string>
+    <string name="text_informasi">Informasi</string>
+
+    //TEXT
+    <string name="text_aboutus">Bimbingan Belajar Smart Club hadir untuk membantu siswa dalam menghadapi kesulitan
+        belajar jika dilakukan sendiri di rumah. Materi yang diajarkan kepada siswa menyesuaikan
+        dengan kebutuhan mereka. Tugas sekolah atau Pekerjaan Rumah (PR) yang sulit dikerjakan
+        sendiri akan menjadi mudah apabila didiskusikan bersama di bimbingan belajar. Selain itu
+        Bimbingan Belajar Smart Club juga memberikan pembekalan, pengulangan dan penguatan materi
+        saat siswa akan menghadapi berbagai ujian di sekolah. Dengan suasana nyaman dan pendekatan
+        yang baik dari tenaga pengajar kepada siswa, diharapkan siswa merasakan suasana belajar di
+        Bimbingan Belajar Smart Club yang tidak berbeda ketika mereka belajar di rumah sendiri.</string>
+
+    <string name="text_visimisi">Visi kami “Menjadi mitra sekolah dalam memajukan pendidikan dan meningkatkan kualitas anak didik”.
+Dan misi :
+1. Mewujudkan bimbingan belajar yang berskala nasional.
+2. Mendidik siswa menuju prestasi puncak untuk melahirkan siswa yang berakhlakul karimah dan berprestasi baik ditingkat daerah maupun nasional.
+3. Meningkatkan budaya belajar dan mutu pendidikan.
+4. Meningkatkan dan mengembangkan kemampuan siswa dalam menyelesaikan soal secara cepat dan jujur.</string>
+
+
+    //PAGE
+    <string name="text_profile">Profile</string>
+    <string name="text_jadwal">Jadwal</string>
+    <string name="text_kelas">Ruang Kelas</string>
+    <string name="text_siswa">Siswa</string>
+    <string name="text_guru">Guru</string>
+    <string name="text_info">Info</string>
+    <string name="text_welcome">Welcome to Smart Club</string>
+    <string name="text_logout">Logout</string>
+    <string name="text_report">Report</string>
+    <string name="text_confirm">Konfirmasi</string>
+    <string name="text_confirmAdmin">Konformasi Pembayaran</string>
+    <string name="text_pembayaran">Pembayaran</string>
+    <string name="text_tidakadadata">Tidak Ada Data</string>
+
+    //ERROR MESSAGE
+    <string name="filled_register">Gagal Mendaftar</string>
+
+    <string name="title_activity_my_info">MyInfo</string>
+
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+
+    <string-array name="options_array">
+        <item>Option:</item>
+        <item>Lihat Siswa</item>
+        <item>Tambah Siswa</item>
+    </string-array>
+
+    <string-array name="times_array">
+        <item>09:00-11:00</item>
+        <item>13:00-15:00</item>
+        <item>16:00-18:00</item>
+    </string-array>
+
+    <string-array name="logout_array">
+        <item>Apakah ingin keluar ?</item>
+        <item>Logout</item>
+    </string-array>
+</resources>
