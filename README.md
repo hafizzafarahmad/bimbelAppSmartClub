@@ -44,6 +44,5 @@ Untuk perkembangan selanjutnya aplikasi:
 <img src="https://github.com/hafizzafarahmad/ScreenshotApp/blob/master/Screenshot_20191227-105250.jpg" width="23%"></img> 
 <img src="https://github.com/hafizzafarahmad/ScreenshotApp/blob/master/Screenshot_20191227-105313.jpg" width="23%"></img> 
 <img src="https://github.com/hafizzafarahmad/ScreenshotApp/blob/master/Screenshot_20191227-105322.jpg" width="23%"></img> 
-<img src="https://github.com/hafizzafarahmad/ScreenshotApp/blob/master/Screenshot_20191227-110155.jpg" width="23%"></img>
 
 
