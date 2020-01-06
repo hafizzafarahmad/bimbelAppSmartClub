@@ -141,6 +141,10 @@ public class MySchedule extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         String matpel = dataSnapshot.child("classroom").getValue().toString();
 
+                        if (matpel.isEmpty()){
+                            matpel = "";
+                        }
+
                         viewHolder.setMatPel(matpel);
                     }
 

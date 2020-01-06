@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/add_info"
+        android:icon="@drawable/info"
+        android:title="Tambah Info" />
+
+    <item
+        android:id="@+id/add_siswa"
+        android:icon="@drawable/ic_add"
+        android:title="Tambah Siswa" />
+
+    <item
+        android:id="@+id/add_payment"
+        android:icon="@drawable/ic_payment"
+        android:title="Tambah Pembayaran" />
+
+    <item
+        android:id="@+id/konfirmasi"
+        android:icon="@drawable/ic_report"
+        android:title="Konfirmasi Pembayran" />
+
+</menu>

@@ -56,7 +56,7 @@ public class Util {
         scheduleRef = mFirebaseDatabase.getReference().child("Schedule");
         userRef = mFirebaseDatabase.getReference().child("Users");
         mContext = context;
-        userID = mAuth.getCurrentUser().getUid();
+
 
     }
 
@@ -204,15 +204,6 @@ public class Util {
         });
 
 
-    }
-
-    public void addConfirmation(String ni, String an, String payment, String image){
-
-        Confirmation confirmation = new Confirmation(ni, an, image, payment);
-        String id = ni+payment;
-        myRef.child("Confirmations")
-                .child(id)
-                .setValue(confirmation);
     }
 
 }

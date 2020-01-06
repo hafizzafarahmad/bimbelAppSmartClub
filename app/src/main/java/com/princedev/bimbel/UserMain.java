@@ -65,7 +65,9 @@ public class UserMain extends AppCompatActivity {
                         break;
                     case 1:
                         SaveDataPreference.clearAllPref(mContext);
-                        startActivity(new Intent(mContext, Login.class));
+                        Intent intent = new Intent(mContext, Login.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                         finish();
                         break;
                 }

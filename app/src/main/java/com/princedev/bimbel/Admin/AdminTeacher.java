@@ -12,14 +12,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.princedev.bimbel.Model.User;
 import com.princedev.bimbel.R;
 import com.princedev.bimbel.Utils.Util;
@@ -31,7 +35,7 @@ import static com.princedev.bimbel.Utils.Util.isStringNull;
 
 public class AdminTeacher extends AppCompatActivity {
 
-    private DatabaseReference userRef;
+    private DatabaseReference userRef, reportRef, scheduleRef;
     private RecyclerView usersList;
     private Context mContext = AdminTeacher.this;
     private Util util;
@@ -41,7 +45,7 @@ public class AdminTeacher extends AppCompatActivity {
     private ImageView backBtn;
     private TextView noData;
 
-    private  AlertDialog.Builder dialog;
+    private AlertDialog.Builder dialog;
     private LayoutInflater inflater;
     private View dialogView;
 
@@ -53,6 +57,8 @@ public class AdminTeacher extends AppCompatActivity {
         util = new Util(mContext);
 
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        reportRef = FirebaseDatabase.getInstance().getReference().child("Reports");
+        scheduleRef = FirebaseDatabase.getInstance().getReference().child("Schedule");
 
         noData = findViewById(R.id.text_nodata);
         fab = findViewById(R.id.fab_add_user);
@@ -108,6 +114,8 @@ public class AdminTeacher extends AppCompatActivity {
                     util.newUser(nis, password, "", "", "", "default",
                             "", "", "pengajar", "", "", "");
                 }
+
+                dialog.dismiss();
             }
         });
 
@@ -133,11 +141,70 @@ public class AdminTeacher extends AppCompatActivity {
                 userQuery
         ) {
             @Override
-            protected void populateViewHolder(final UsersViewHolder viewHolder, User model, int position) {
+            protected void populateViewHolder(final UsersViewHolder viewHolder, final User model, int position) {
                 Log.d("data", "populateViewHolder: " + getRef(position).getKey());
+                final String id = getRef(position).getKey();
                 viewHolder.setProfileimage(mContext, model.getProfilePhoto());
                 viewHolder.setFullname(model.getNama());
                 viewHolder.setNI(model.getNi());
+
+                viewHolder.deleteBtn.setVisibility(View.VISIBLE);
+                viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        dialog = new AlertDialog.Builder(mContext);
+                        dialog.setCancelable(true);
+                        dialog.setTitle("Hapus Pengajar");
+                        dialog.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                reportRef.orderByChild("teacher").equalTo(model.getNama()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot ds: dataSnapshot.getChildren()){
+                                            String idReport = ds.getKey();
+                                            reportRef.child(idReport).removeValue();
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                                scheduleRef.orderByChild("teacher").equalTo(model.getNama()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot ds: dataSnapshot.getChildren()){
+                                            String idSchedule = ds.getKey();
+                                            scheduleRef.child(idSchedule).removeValue();
+                                        }
+
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                                userRef.child(id).removeValue();
+
+                            }
+                        });
+                        dialog.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        dialog.show();
+                    }
+                });
 
                 noData.setVisibility(View.GONE);
 
@@ -149,11 +216,13 @@ public class AdminTeacher extends AppCompatActivity {
     public static class UsersViewHolder extends RecyclerView.ViewHolder{
 
         View mView;
+        ImageButton deleteBtn;
 
         public UsersViewHolder(View itemView) {
             super(itemView);
 
             mView = itemView;
+            deleteBtn = mView.findViewById(R.id.delete_btn);
         }
 
         private void setProfileimage(Context ctx, String profileimage){

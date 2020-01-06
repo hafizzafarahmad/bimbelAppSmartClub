@@ -100,6 +100,14 @@
                     android:layout_marginRight="10dp"
                     android:visibility="gone"/>
 
+                <ImageButton
+                    android:src="@drawable/ic_delete"
+                    android:id="@+id/delete_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@color/colorWhite"
+                    android:visibility="gone"/>
+
             </LinearLayout>
 
         </RelativeLayout>

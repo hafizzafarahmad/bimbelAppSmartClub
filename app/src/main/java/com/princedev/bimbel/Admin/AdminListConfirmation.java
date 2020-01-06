@@ -39,7 +39,7 @@ public class AdminListConfirmation extends AppCompatActivity {
     private Context mContext = AdminListConfirmation.this;
 
     private ImageView imageConfirmView;
-    private TextView pembayaranTxt, totalTxt, anView, paymentView, noData;
+    private TextView pembayaranTxt, totalTxt, anView, paymentView, noData, paymentNi;
     private RecyclerView confirmList;
     private String ni, paymentDialog, an, image, id, idPayment;
 
@@ -86,7 +86,7 @@ public class AdminListConfirmation extends AppCompatActivity {
                 id = getRef(position).getKey();
 
                 viewHolder.setNamePayment(": " + model.getAn());
-                viewHolder.setNi(model.getNi());
+                viewHolder.setNi();
                 viewHolder.setPayment(": " + model.getPayment());
 
                 noData.setVisibility(View.GONE);
@@ -132,9 +132,9 @@ public class AdminListConfirmation extends AppCompatActivity {
             totalText.setText(total);
         }
 
-        private void setNi(String ni){
+        private void setNi(){
             TextView niText = mView.findViewById(R.id.all_status_payment);
-            niText.setText(ni);
+            niText.setVisibility(View.GONE);
         }
 
     }
@@ -152,6 +152,7 @@ public class AdminListConfirmation extends AppCompatActivity {
         anView = dialogView.findViewById(R.id.text_anView);
         paymentView = dialogView.findViewById(R.id.text_paymentView);
         imageConfirmView = dialogView.findViewById(R.id.confirm_imageView);
+        paymentNi = dialogView.findViewById(R.id.text_paymentni);
 
         confirmRef.child(idConfrm).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -165,6 +166,7 @@ public class AdminListConfirmation extends AppCompatActivity {
 
                     anView.setText(" : " + nameDialog);
                     paymentView.setText(" : " + paymentDialog);
+                    paymentNi.setText(" : " + ni);
                     Picasso.with(mContext).load(imageDialog).placeholder(R.drawable.profile).into(imageConfirmView);
                 }
             }

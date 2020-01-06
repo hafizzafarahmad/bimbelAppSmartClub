@@ -32,33 +32,48 @@
             android:layout_centerHorizontal="true"
             android:textSize="18sp" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="15dp"
-            android:src="@drawable/ic_report"
-            android:id="@+id/fab_confirm"
-            android:layout_above="@+id/fab_add_payment" />
+<!--        <android.support.design.widget.FloatingActionButton-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="100dp"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_marginRight="15dp"-->
+<!--            android:layout_marginBottom="15dp"-->
+<!--            android:src="@drawable/ic_report"-->
+<!--            android:id="@+id/fab_confirm"-->
+<!--            android:layout_above="@+id/fab_add_payment" />-->
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="15dp"
-            android:src="@drawable/ic_payment"
-            android:id="@+id/fab_add_payment"
-            android:layout_above="@+id/fab_add_user" />
+<!--        <android.support.design.widget.FloatingActionButton-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="100dp"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_marginRight="15dp"-->
+<!--            android:src="@drawable/ic_payment"-->
+<!--            android:id="@+id/fab_add_payment"-->
+<!--            android:layout_above="@+id/fab_add_user" />-->
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+
+<!--        <android.support.design.widget.FloatingActionButton-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="100dp"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_margin="15dp"-->
+<!--            android:src="@drawable/ic_add"-->
+<!--            android:id="@+id/fab_add_user"/>-->
+
+        <io.github.yavski.fabspeeddial.FabSpeedDial
+            app:fabDrawable="@drawable/ic_add"
+            android:id="@+id/fab_student"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_margin="15dp"
-            android:src="@drawable/ic_add"
-            android:id="@+id/fab_add_user"/>
+            app:fabGravity="bottom_end"
+            app:fabMenu="@menu/main_menu"
+            app:miniFabBackgroundTint="@android:color/white"
+            app:miniFabDrawableTint="?attr/colorPrimaryDark"
+            app:miniFabTitleTextColor="?attr/colorPrimaryDark"
+            android:layout_marginBottom="10dp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

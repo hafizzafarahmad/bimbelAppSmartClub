@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.internal.NavigationMenu;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,35 +12,45 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.princedev.bimbel.Model.Info;
 import com.princedev.bimbel.Model.User;
 import com.princedev.bimbel.R;
 import com.princedev.bimbel.Utils.Util;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.github.yavski.fabspeeddial.FabSpeedDial;
 
 import static com.princedev.bimbel.Utils.Util.isStringNull;
 
 public class AdminStudent extends AppCompatActivity {
 
-    private DatabaseReference userRef;
+    private DatabaseReference userRef, infoRef, reportStudentRef, paymentsRef;
     private Context mContext = AdminStudent.this;
     private Util util;
     private ImageView backBtn;
 
     private RecyclerView usersList;
     private FloatingActionButton fab, fabPayment, fabConfirm;
-    private EditText nisEdt, passwordEdt, namaPaymentEdt, totalPaymentEdt;
+    private EditText nisEdt, passwordEdt, namaPaymentEdt, totalPaymentEdt, judulEdt, infoEdt;
     private TextView noData;
 
     AlertDialog.Builder dialog, dialogPayment;
@@ -51,41 +62,80 @@ public class AdminStudent extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_student);
 
-        util = new Util(mContext);
+        util = new Util(AdminStudent.this);
 
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        infoRef = FirebaseDatabase.getInstance().getReference().child("Informations");
+        reportStudentRef = FirebaseDatabase.getInstance().getReference().child("ReportStudents");
+        paymentsRef = FirebaseDatabase.getInstance().getReference().child("Payments");
 
         noData = findViewById(R.id.text_nodata);
         fab = findViewById(R.id.fab_add_user);
-        fabPayment = findViewById(R.id.fab_add_payment);
-        fabConfirm = findViewById(R.id.fab_confirm);
 
-        fabConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(mContext, AdminListConfirmation.class));
-            }
-        });
+//        fabPayment = findViewById(R.id.fab_add_payment);
+//        fabConfirm = findViewById(R.id.fab_confirm);
 
-        fabPayment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogAddPayment();
-            }
-        });
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogForm();
-            }
-        });
+//        fabConfirm.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(mContext, AdminListConfirmation.class));
+//            }
+//        });
+//
+//        fabPayment.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dialogAddPayment();
+//            }
+//        });
+//
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                dialogForm();
+//            }
+//        });
 
         backBtn = findViewById(R.id.back_btn);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
+            }
+        });
+
+        FabSpeedDial fabSpeedDial = (FabSpeedDial) findViewById(R.id.fab_student);
+        fabSpeedDial.setMenuListener(new FabSpeedDial.MenuListener() {
+            @Override
+            public boolean onPrepareMenu(NavigationMenu navigationMenu) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.konfirmasi:
+                        startActivity(new Intent(mContext, AdminListConfirmation.class));
+                        break;
+
+                    case R.id.add_siswa:
+                        dialogForm();
+                        break;
+
+                    case R.id.add_payment:
+                        dialogAddPayment();
+                        break;
+
+                    case R.id.add_info:
+                        dialogAddInfo();
+                        break;
+                }
+                return false;
+            }
+
+            @Override
+            public void onMenuClosed() {
+
             }
         });
 
@@ -147,7 +197,6 @@ public class AdminStudent extends AppCompatActivity {
         inflater = getLayoutInflater();
         dialogView = inflater.inflate(R.layout.form_data, null);
         dialog.setView(dialogView);
-        dialog.setCancelable(true);
         dialog.setIcon(R.mipmap.ic_launcher);
         dialog.setTitle("Tambah Siswa");
 
@@ -182,6 +231,53 @@ public class AdminStudent extends AppCompatActivity {
         dialog.show();
     }
 
+    private void dialogAddInfo(){
+
+        dialog = new AlertDialog.Builder(AdminStudent.this);
+        inflater = getLayoutInflater();
+        dialogView = inflater.inflate(R.layout.form_info, null);
+        dialog.setView(dialogView);
+        dialog.setCancelable(true);
+        dialog.setIcon(R.mipmap.ic_launcher);
+        dialog.setTitle("Tambah Informasi");
+
+        judulEdt = dialogView.findViewById(R.id.form_judul);
+        infoEdt = dialogView.findViewById(R.id.form_info);
+
+        dialog.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                String judul    = judulEdt.getText().toString();
+                String infoIsi  = infoEdt.getText().toString();
+
+                Calendar myCalendar = Calendar.getInstance();
+                String formatTanggalID = "yyyyMMddss";
+                SimpleDateFormat sdfID = new SimpleDateFormat(formatTanggalID);
+
+                String dateID = sdfID.format(myCalendar.getTime());
+
+                if(isStringNull(judul) || isStringNull(infoIsi)){
+                    Toast.makeText(AdminStudent.this, "Semua Form Harus di Isi", Toast.LENGTH_SHORT).show();
+                }else {
+                    Info info = new Info(dateID, judul, infoIsi);
+                    infoRef.child(dateID).setValue(info);
+                }
+            }
+        });
+
+        dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
     //Menampilkan Seluruh Siswa
     private void displayAllUsers() {
 
@@ -196,10 +292,37 @@ public class AdminStudent extends AppCompatActivity {
             @Override
             protected void populateViewHolder(final UsersViewHolder viewHolder, User model, int position) {
                 Log.d("data", "populateViewHolder: " + getRef(position).getKey());
-                String id = getRef(position).getKey();
+                final String id = getRef(position).getKey();
                 viewHolder.setProfileimage(mContext, model.getProfilePhoto());
                 viewHolder.setFullname(model.getNama());
                 viewHolder.setNI(model.getNi());
+
+                viewHolder.deleteBtn.setVisibility(View.VISIBLE);
+                viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        dialog = new AlertDialog.Builder(AdminStudent.this);
+                        dialog.setTitle("Hapus Siswa");
+                        dialog.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                paymentsRef.child(id).removeValue();
+                                reportStudentRef.child(id).removeValue();
+                                userRef.child(id).removeValue();
+                            }
+                        });
+                        dialog.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        dialog.show();
+                    }
+                });
+
+
 
                 noData.setVisibility(View.GONE);
 
@@ -211,11 +334,13 @@ public class AdminStudent extends AppCompatActivity {
     public static class UsersViewHolder extends RecyclerView.ViewHolder{
 
         View mView;
+        ImageButton deleteBtn;
 
         public UsersViewHolder(View itemView) {
             super(itemView);
 
             mView = itemView;
+            deleteBtn = mView.findViewById(R.id.delete_btn);
         }
 
         private void setProfileimage(Context ctx, String profileimage){

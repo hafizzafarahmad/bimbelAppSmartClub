@@ -34,6 +34,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.princedev.bimbel.Admin.AdminStudent;
+import com.princedev.bimbel.Model.Confirmation;
 import com.princedev.bimbel.Model.Payment;
 import com.princedev.bimbel.Model.User;
 import com.princedev.bimbel.R;
@@ -183,7 +184,7 @@ public class MyReportStudent extends AppCompatActivity {
                 an    = anEdt.getText().toString();
                 paymentType  = paymentSpinner.getSelectedItem().toString();
 
-                if(isStringNull(an) || isStringNull(paymentType) || isStringNull(imageUri.toString())){
+                if(isStringNull(an) || isStringNull(paymentType) || imageUri == null){
                     Toast.makeText(mContext, "Semua Form Harus di Isi", Toast.LENGTH_SHORT).show();
                 }else {
                     saveData();
@@ -293,7 +294,10 @@ public class MyReportStudent extends AppCompatActivity {
 
                 if (task.isSuccessful()){
                     downloadUrl = task.getResult().getDownloadUrl().toString();
-                    util.addConfirmation(ni, an, paymentType, downloadUrl);
+                    Confirmation confirmation = new Confirmation(ni, an, downloadUrl,paymentType);
+                    String id = ni+paymentType;
+                    confirmRef.child(id)
+                            .setValue(confirmation);
                 }
             }
         });
