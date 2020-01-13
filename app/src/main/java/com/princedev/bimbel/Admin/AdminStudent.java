@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -48,6 +50,7 @@ public class AdminStudent extends AppCompatActivity {
     private Util util;
     private ImageView backBtn;
 
+    private EditText searchInputText;
     private RecyclerView usersList;
     private FloatingActionButton fab, fabPayment, fabConfirm;
     private EditText nisEdt, passwordEdt, namaPaymentEdt, totalPaymentEdt, judulEdt, infoEdt;
@@ -71,38 +74,6 @@ public class AdminStudent extends AppCompatActivity {
 
         noData = findViewById(R.id.text_nodata);
         fab = findViewById(R.id.fab_add_user);
-
-//        fabPayment = findViewById(R.id.fab_add_payment);
-//        fabConfirm = findViewById(R.id.fab_confirm);
-
-//        fabConfirm.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(mContext, AdminListConfirmation.class));
-//            }
-//        });
-//
-//        fabPayment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                dialogAddPayment();
-//            }
-//        });
-//
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                dialogForm();
-//            }
-//        });
-
-        backBtn = findViewById(R.id.back_btn);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
 
         FabSpeedDial fabSpeedDial = (FabSpeedDial) findViewById(R.id.fab_student);
         fabSpeedDial.setMenuListener(new FabSpeedDial.MenuListener() {
@@ -147,7 +118,102 @@ public class AdminStudent extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         usersList.setLayoutManager(linearLayoutManager);
 
+        searchInputText = findViewById(R.id.search_input);
+        searchInputText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String searchBoxInput = searchInputText.getText().toString();
+                searchFriends(searchBoxInput);
+            }
+        });
+
         displayAllUsers();
+    }
+
+    //Pencarian
+    private void searchFriends(String searchBoxInput) {
+
+        if (searchBoxInput.length() == 0 ){
+            displayAllUsers();
+        }else {
+            Query searchFriendsQuery = userRef.orderByChild("nama")
+                    .startAt(searchBoxInput)
+                    .endAt(searchBoxInput + "\uf8ff");
+
+            FirebaseRecyclerAdapter<User, UsersViewHolder> firebaseRecyclerAdapter
+                    = new FirebaseRecyclerAdapter<User, UsersViewHolder>(
+                    User.class,
+                    R.layout.all_users_item,
+                    UsersViewHolder.class,
+                    searchFriendsQuery
+            ) {
+                @Override
+                protected void populateViewHolder(final UsersViewHolder viewHolder, User model, int position) {
+                    Log.d("data", "populateViewHolder: " + getRef(position).getKey());
+                    final String id = getRef(position).getKey();
+
+                    if (model.getStatus().equals("pengajar")){
+                        viewHolder.mView.setVisibility(View.GONE);
+                    }
+
+                    viewHolder.setProfileimage(mContext, model.getProfilePhoto());
+                    viewHolder.setFullname(model.getNama());
+                    viewHolder.setNI(model.getNi());
+
+                    viewHolder.deleteBtn.setVisibility(View.VISIBLE);
+                    viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            dialog = new AlertDialog.Builder(AdminStudent.this);
+                            dialog.setTitle("Hapus Siswa");
+                            dialog.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    paymentsRef.child(id).removeValue();
+                                    reportStudentRef.child(id).removeValue();
+                                    userRef.child(id).removeValue();
+                                }
+                            });
+                            dialog.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            dialog.show();
+                        }
+                    });
+
+                    viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(mContext, ViewStudent.class);
+                            intent.putExtra("id", id);
+                            startActivity(intent);
+                        }
+                    });
+
+
+
+                    noData.setVisibility(View.GONE);
+
+                }
+            };
+            usersList.setAdapter(firebaseRecyclerAdapter);
+        }
+
+
     }
 
     //Form Tambah Pembayaran
@@ -319,6 +385,15 @@ public class AdminStudent extends AppCompatActivity {
                             }
                         });
                         dialog.show();
+                    }
+                });
+
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(mContext, ViewStudent.class);
+                        intent.putExtra("id", id);
+                        startActivity(intent);
                     }
                 });
 

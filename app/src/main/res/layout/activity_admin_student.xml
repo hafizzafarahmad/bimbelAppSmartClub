@@ -15,6 +15,18 @@
         <include layout="@layout/app_bar_layout"
             android:id="@+id/main_page_toolbar"/>
 
+        <EditText
+            android:id="@+id/search_input"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Search..."
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@null"
+            android:paddingTop="5dp"
+            android:textSize="20sp"
+            android:textColor="@android:color/black"/>
+
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -74,32 +86,6 @@
             app:miniFabDrawableTint="?attr/colorPrimaryDark"
             app:miniFabTitleTextColor="?attr/colorPrimaryDark"
             android:layout_marginBottom="10dp"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/rel1">
-
-            <ImageView
-                android:id="@+id/back_btn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_back"
-                android:layout_marginLeft="15dp"
-                android:layout_centerVertical="true"/>
-
-            <TextView
-                android:textColor="@android:color/black"
-                android:layout_toRightOf="@+id/back_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_siswa"
-                android:layout_centerVertical="true"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginLeft="10dp"/>
-
-        </RelativeLayout>
 
     </RelativeLayout>
 

@@ -3,11 +3,14 @@ package com.princedev.bimbel.Admin;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +51,7 @@ public class AdminTeacher extends AppCompatActivity {
     private AlertDialog.Builder dialog;
     private LayoutInflater inflater;
     private View dialogView;
+    private EditText searchInputText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,14 +73,6 @@ public class AdminTeacher extends AppCompatActivity {
             }
         });
 
-        backBtn = findViewById(R.id.back_btn);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-
         usersList = findViewById(R.id.recycle_user);
         usersList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -84,7 +80,131 @@ public class AdminTeacher extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         usersList.setLayoutManager(linearLayoutManager);
 
+        searchInputText = findViewById(R.id.search_input);
+        searchInputText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String searchBoxInput = searchInputText.getText().toString();
+                searchFriends(searchBoxInput);
+            }
+        });
+
         DisplayAllUsers();
+    }
+
+    private void searchFriends(String searchBoxInput) {
+
+        if (searchBoxInput.length() == 0 ){
+            DisplayAllUsers();
+        }else {
+            Query searchFriendsQuery = userRef.orderByChild("nama")
+                    .startAt(searchBoxInput)
+                    .endAt(searchBoxInput + "\uf8ff");
+            FirebaseRecyclerAdapter<User, UsersViewHolder> firebaseRecyclerAdapter
+                    = new FirebaseRecyclerAdapter<User, UsersViewHolder>(
+                    User.class,
+                    R.layout.all_users_item,
+                    UsersViewHolder.class,
+                    searchFriendsQuery
+            ) {
+                @Override
+                protected void populateViewHolder(final UsersViewHolder viewHolder, final User model, int position) {
+                    Log.d("data", "populateViewHolder: " + getRef(position).getKey());
+                    final String id = getRef(position).getKey();
+
+                    if (model.getStatus().equals("siswa")){
+                        viewHolder.mView.setVisibility(View.GONE);
+                    }
+
+                    viewHolder.setProfileimage(mContext, model.getProfilePhoto());
+                    viewHolder.setFullname(model.getNama());
+                    viewHolder.setNI(model.getNi());
+
+                    viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(mContext, ViewTeacher.class);
+                            intent.putExtra("id", id);
+                            startActivity(intent);
+                        }
+                    });
+
+                    viewHolder.deleteBtn.setVisibility(View.VISIBLE);
+                    viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            dialog = new AlertDialog.Builder(mContext);
+                            dialog.setCancelable(true);
+                            dialog.setTitle("Hapus Pengajar");
+                            dialog.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    reportRef.orderByChild("teacher").equalTo(model.getNama()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot ds: dataSnapshot.getChildren()){
+                                                String idReport = ds.getKey();
+                                                reportRef.child(idReport).removeValue();
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+                                    scheduleRef.orderByChild("teacher").equalTo(model.getNama()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot ds: dataSnapshot.getChildren()){
+                                                String idSchedule = ds.getKey();
+                                                scheduleRef.child(idSchedule).removeValue();
+                                            }
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+                                    userRef.child(id).removeValue();
+
+                                }
+                            });
+                            dialog.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            dialog.show();
+                        }
+                    });
+
+                    noData.setVisibility(View.GONE);
+
+                }
+            };
+            usersList.setAdapter(firebaseRecyclerAdapter);
+        }
+
+
     }
 
     private void dialogForm(){
@@ -147,6 +267,15 @@ public class AdminTeacher extends AppCompatActivity {
                 viewHolder.setProfileimage(mContext, model.getProfilePhoto());
                 viewHolder.setFullname(model.getNama());
                 viewHolder.setNI(model.getNi());
+
+                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(mContext, ViewTeacher.class);
+                        intent.putExtra("id", id);
+                        startActivity(intent);
+                    }
+                });
 
                 viewHolder.deleteBtn.setVisibility(View.VISIBLE);
                 viewHolder.deleteBtn.setOnClickListener(new View.OnClickListener() {
